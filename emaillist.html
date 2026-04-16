@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email List Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: #0f172a;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .card {
+        width: 90%;
+        max-width: 600px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        padding: 25px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 26px;
+    }
+
+    .count {
+        text-align: center;
+        color: #60a5fa;
+        margin-bottom: 20px;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    li {
+        background: rgba(255,255,255,0.06);
+        margin-bottom: 10px;
+        padding: 12px;
+        border-radius: 10px;
+        border-left: 3px solid #3b82f6;
+        font-size: 14px;
+    }
+
+    .email {
+        color: #e2e8f0;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1>📧 Email List Dashboard</h1>
+    <div class="count">Total Users: <span id="user-count">0</span></div>
+
+    <ul id="emailList"></ul>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, onSnapshot } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// 🔥 Firebase Config
+const firebaseConfig = {
+    apiKey: "AIzaSyBtndxvyBC6MNqbs4cgtrVV_ZMjFQyv7U0",
+    authDomain: "lead-9c90e.firebaseapp.com",
+    projectId: "lead-9c90e",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 📦 Collection name
+const usersRef = collection(db, "premiumForm");
+
+// UI elements
+const emailList = document.getElementById("emailList");
+const userCount = document.getElementById("user-count");
+
+// 🚀 Real-time listener
+onSnapshot(usersRef, (snapshot) => {
+
+    emailList.innerHTML = "";
+
+    userCount.innerText = snapshot.size;
+
+    snapshot.forEach((doc) => {
+        const data = doc.data();
+
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <div class="email">📩 ${data.email}</div>
+        `;
+
+        emailList.appendChild(li);
+    });
+});
+
+</script>
+
+</body>
+</html>
